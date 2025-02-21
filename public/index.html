@@ -26,7 +26,7 @@
 
     /* タイマーの表示を最上部に固定 */
     #time {
-      font-size: 5em;
+      font-size: 3em;
       letter-spacing: 3px;
       padding: 10px 20px;
       border-radius: 5px;
@@ -44,9 +44,9 @@
       max-height: 50vh;
       overflow-y: auto;
       background: #111;
-      padding: 10px;
+      /* padding: 10px; */
       border-radius: 5px;
-      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      /* box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); */
       text-align: left;
       margin-top: 100px;
       /* タイマーとラップリストの間隔 */
@@ -54,7 +54,7 @@
 
     .lap {
       padding: 5px 0;
-      border-bottom: 1px solid #333;
+      /* border-bottom: 1px solid #333; */
     }
 
     /* ボタンを最下部に固定 */
@@ -63,13 +63,14 @@
       bottom: var(--bottom-spacing, 20px);
       display: flex;
       justify-content: center;
-      gap: 40px;
+      gap: 30px;
     }
 
     /* ボタンのデザイン */
     button {
+      width:150px;
       font-size: 1.2em;
-      padding: 15px 40px;
+      padding: 15px 0px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -89,16 +90,22 @@
       box-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
     }
 
-    button:hover {
+    /* button:hover {
       transform: scale(1.1);
       opacity: 0.8;
-    }
+    } */
   </style>
 </head>
 
 <body>
   <div id="time">00:00.00</div>
-  <div id="laps"></div>
+
+  <div id="laps">
+    <div id="lapNun"></div>
+    <div id="lapT1"></div>
+    <div id="latT2"></div>
+  </div>
+
   <div class="buttons">
     <button id="action">Reset</button>
     <button id="toggle">Start</button>

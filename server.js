@@ -78,9 +78,13 @@ socket.on("lap", (lapTime) => {
     let lapMs = parseTimeToMs(lapTime); // ラップタイムをミリ秒に変換
 
     let previousSplit = laps.length > 0 ? laps[laps.length - 1].split : 0; // 前のスプリットタイムを取得
-    let splitTime = previousSplit + lapMs; // 正しく累積時間を加算
+    let splitTime = lapMs-previousSplit ; // 正しく累積時間を減算
+  // let splitTime = previousSplit; // 正しく累積時間を減算
+
+  console.log('lapMs:', lapMs);
 
     laps.push({ lap: lapMs, split: splitTime }); // 正しいスプリットタイムを保存
+
     broadcastLaps();
 });
 

@@ -76,13 +76,28 @@ function formatTimeFromMs(ms) {
 }
 
 function updateLapsDisplay(laps) {
-    const lapsContainer = document.getElementById("laps");
+  const lapsContainer = document.getElementById("laps");
+
+
     lapsContainer.innerHTML = ""; // リストをクリア
 
-    laps.forEach((lapData, index) => {
-        const lapElement = document.createElement("div");
-        lapElement.className = "lap";
-        lapElement.textContent = `Lap ${index + 1}: ${formatTimeFromMs(lapData.lap)} | ${formatTimeFromMs(lapData.split)}`; // ミリ秒を適切にフォーマット
-        lapsContainer.appendChild(lapElement);
+    laps.reverse().forEach((lapData, index) => {
+      const lapElement = document.createElement("div");
+
+      lapElement.className = "lap";
+
+
+        let lapN = String(laps.length - index).padStart(2, "0"); // 2桁固定にする
+
+
+      lapElement.textContent = `${lapN}: ${formatTimeFromMs(lapData.lap)} | ${formatTimeFromMs(lapData.split)}`; // ミリ秒を適切にフォーマット
+
+        // 一行おきに背景色を変更
+        if (index % 2 === 0) {
+            lapElement.style.backgroundColor = "#1f1f1f"; // 明るいグレー
+        } else {
+            lapElement.style.backgroundColor = "#000"; // 白
+        }
+      lapsContainer.appendChild(lapElement);
     });
 }
