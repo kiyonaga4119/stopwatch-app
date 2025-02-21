@@ -90,25 +90,29 @@ function updateButtonState() {
 document.getElementById("toggle").addEventListener("mousedown", () => {
 
     if (running) {
-        playSound(stopSound);  // ストップ時の音
+
         socket.emit("stop");
+        playSound(stopSound);  // ストップ時の音
     } else {
-        playSound(startSound);
+
         // スタート時は両方のタイマーを0から始める
         lapStartTime = 0;
         socket.emit("start");
+        playSound(startSound);
     }
 });
 
 // 「ラップ / リセット」ボタンの切り替え
 document.getElementById("action").addEventListener("mousedown", () => {
     if (running) {
-        playSound(lapSound);
+
         const lapTime = formatTime(elapsedTime);
         socket.emit("lap", lapTime);
+        playSound(lapSound);
     } else {
-        playSound(resetSound);
+
         socket.emit("reset");
+        playSound(resetSound);
     }
 });
 
