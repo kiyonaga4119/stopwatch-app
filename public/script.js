@@ -1,6 +1,8 @@
 const socket = io();
 let elapsedTime = 0;
+let splitTime = 0; // splitTime を追加
 let running = false;
+let lapStartTime = 0; // ラップ開始時刻を保持する変数
 
 function formatTime(ms) {
     let date = new Date(ms);
@@ -12,15 +14,24 @@ function formatTime(ms) {
 
 function updateDisplay() {
     document.getElementById("time").textContent = formatTime(elapsedTime);
+    let lapElapsed = elapsedTime - lapStartTime;
+    document.getElementById("splitTime").textContent = formatTime(lapElapsed);
 }
+
+
 
 // サーバーから現在のタイムを受け取る
 socket.on("updateTime", (data) => {
     elapsedTime = data.elapsedTime;
     running = data.running;
+    lapStartTime = data.lapStartTime;  // サーバーからのlapStartTimeを使用
     updateDisplay();
     updateButtonState();
 });
+
+
+
+
 
 // サーバーからラップタイムのリストを受信（新しいものを上に表示）
 socket.on("updateLaps", (laps) => {
@@ -55,6 +66,8 @@ document.getElementById("toggle").addEventListener("mousedown", () => {
     if (running) {
         socket.emit("stop");
     } else {
+        // スタート時は両方のタイマーを0から始める
+        lapStartTime = 0;
         socket.emit("start");
     }
 });
@@ -68,6 +81,7 @@ document.getElementById("action").addEventListener("mousedown", () => {
         socket.emit("reset");
     }
 });
+
 
 function formatTimeFromMs(ms) {
     let minutes = Math.floor(ms / 60000);
@@ -101,3 +115,10 @@ function updateLapsDisplay(laps) {
       lapsContainer.appendChild(lapElement);
     });
 }
+
+// ボタン無効化切替のイベントリスナー
+document.getElementById("disableButtons").addEventListener("change", () => {
+    const disable = document.getElementById("disableButtons").checked;
+    document.getElementById("toggle").disabled = disable;
+    document.getElementById("action").disabled = disable;
+});

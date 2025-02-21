@@ -13,13 +13,17 @@ app.use(express.static(path.join(__dirname, "public")));
 
 let startTime = 0;
 let elapsedTime = 0;
+let splitTime = 0; // splitTime を追加
 let running = false;
 let timerInterval;
 let laps = [];
+let lapStartTime = 0;
+
 
 function broadcastTime() {
-    io.emit("updateTime", { elapsedTime, running });
+    io.emit("updateTime", { elapsedTime, running, lapStartTime });
 }
+
 
 function broadcastLaps() {
     io.emit("updateLaps", laps);
@@ -32,34 +36,44 @@ io.on("connection", (socket) => {
     socket.emit("updateTime", { elapsedTime, running });
     socket.emit("updateLaps", laps);
 
-    socket.on("start", () => {
-        if (!running) {
-            startTime = Date.now() - elapsedTime;
-            timerInterval = setInterval(() => {
-                elapsedTime = Date.now() - startTime;
-                broadcastTime();
-            }, 10);
-            running = true;
-            broadcastTime();
+socket.on("start", () => {
+    if (!running) {
+        startTime = Date.now() - elapsedTime;
+        if (elapsedTime === 0) {
+            lapStartTime = 0;
         }
-    });
-
-    socket.on("stop", () => {
-        if (running) {
-            clearInterval(timerInterval);
-            running = false;
+        timerInterval = setInterval(() => {
+            elapsedTime = Date.now() - startTime;
             broadcastTime();
-        }
-    });
-
-    socket.on("reset", () => {
-        clearInterval(timerInterval);
-        elapsedTime = 0;
-        running = false;
-        laps = [];
+        }, 10);
+        running = true;
         broadcastTime();
-        broadcastLaps();
-    });
+    }
+});
+
+
+
+
+socket.on("stop", () => {
+    if (running) {
+        clearInterval(timerInterval);
+        running = false;
+        broadcastTime();
+    }
+});
+
+
+socket.on("reset", () => {
+    clearInterval(timerInterval);
+    elapsedTime = 0;
+    running = false;
+    laps = [];
+    lapStartTime = 0;
+    broadcastTime();
+    broadcastLaps();
+});
+
+
 
 function parseTimeToMs(timeString) {
     let parts = timeString.split(":");
@@ -75,18 +89,17 @@ function formatTimeFromMs(ms) {
 }
 
 socket.on("lap", (lapTime) => {
-    let lapMs = parseTimeToMs(lapTime); // ラップタイムをミリ秒に変換
-
-    let previousSplit = laps.length > 0 ? laps[laps.length - 1].split : 0; // 前のスプリットタイムを取得
-    let splitTime = lapMs-previousSplit ; // 正しく累積時間を減算
-  // let splitTime = previousSplit; // 正しく累積時間を減算
-
-  console.log('lapMs:', lapMs);
-
-    laps.push({ lap: lapMs, split: splitTime }); // 正しいスプリットタイムを保存
-
+    let lapMs = parseTimeToMs(lapTime);
+    let previousLap = laps.length > 0 ? laps[laps.length - 1].lap : 0;
+    let splitTime = lapMs - previousLap;
+    laps.push({ lap: lapMs, split: splitTime });
+    lapStartTime = lapMs;  // ここでlapStartTimeを更新
     broadcastLaps();
+    broadcastTime();
 });
+
+
+
 
 
 

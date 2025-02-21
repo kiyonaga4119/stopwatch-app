@@ -1,15 +1,113 @@
-body {
-  text-align: center;
-  font-family: Arial, sans-serif;
-}
+ /* 背景と全体のレイアウト */
+ body {
+   font-family: 'Courier New', monospace;
+   text-align: center;
+   background-color: #000;
+   color: #fff;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: center;
+   height: 100%;
+   margin: 0;
+   padding-top: var(--top-spacing, 20px);
+   /* 上部の余白を調整可能 */
+   padding-bottom: var(--bottom-spacing, 20px);
+   /* 下部の余白を調整可能 */
+ }
 
-canvas {
-  border: 2px solid black;
-  margin-top: 20px;
-}
+ /* タイマーの表示を最上部に固定 */
+ #time {
+   font-size: 3em;
+   letter-spacing: 3px;
+   padding: 10px 20px;
+   border-radius: 5px;
+   background: #111;
+   box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+   min-width: 280px;
+   /* position: fixed; */
+   /* top: var(--top-spacing, 20px); */
+ }
 
-button {
-  font-size: 1.5em;
-  margin: 5px;
-  padding: 10px;
-}
+ #splitTime {
+   font-size: 3em;
+   letter-spacing: 3px;
+   padding: 10px 20px;
+   border-radius: 5px;
+   background: #111;
+   box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+   min-width: 280px;
+   /* position:relative; */
+   /* top: var(--top-spacing, 120px); */
+ }
+
+ /* ラップリストの中央配置 */
+ #laps {
+   flex-grow: 1;
+   width: 300px;
+   /* max-height: 50vh; */
+   overflow-y: auto;
+   background: #111;
+   /* padding: 10px; */
+   border-radius: 5px;
+   /* box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); */
+   text-align: left;
+   /* margin-top: 50px; */
+   /* タイマーとラップリストの間隔 */
+ }
+
+ .lap {
+   padding: 5px 0;
+   /* border-bottom: 1px solid #333; */
+ }
+
+ /* ボタンを最下部に固定 */
+ .buttons {
+   position: fixed;
+   bottom: var(--bottom-spacing, 20px);
+   display: flex;
+   justify-content: center;
+   gap: 30px;
+ }
+
+ /* ボタンのデザイン */
+ button {
+   width: 150px;
+   font-size: 1.2em;
+   padding: 15px 0px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: all 0.2s ease-in-out;
+   color: #fff;
+   text-transform: uppercase;
+   letter-spacing: 1px;
+ }
+
+ #action {
+   background: #ffc107;
+   box-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
+ }
+
+ #toggle {
+   background: #007bff;
+   box-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
+ }
+
+ /* 無効状態のボタンは透明度を下げ、カーソルを変更 */
+ button:disabled {
+   opacity: 0.5;
+   cursor: not-allowed;
+ }
+
+ /* 無効化切替バーのスタイル */
+ #disableToggle {
+   position: fixed;
+   top: 0;
+   width: 100%;
+   text-align: center;
+   padding: 10px;
+   background: #111;
+   z-index: 1000;
+   color: #fff;
+ }
