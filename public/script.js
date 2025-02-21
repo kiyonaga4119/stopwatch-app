@@ -4,6 +4,31 @@ let splitTime = 0; // splitTime を追加
 let running = false;
 let lapStartTime = 0; // ラップ開始時刻を保持する変数
 
+// const clickSound = new Audio("click.mp3"); // click.mp3を用意してください
+// 各効果音用の Audio オブジェクトを定義
+const startSound = new Audio("start.mp3");
+const stopSound = new Audio("stop.mp3");
+const lapSound = new Audio("lap.mp3");
+const resetSound = new Audio("reset.mp3");
+
+function playSound(sound) {
+    const mute = document.getElementById("muteCheckbox").checked;
+    if (!mute) {
+        sound.currentTime = 0;
+        sound.play();
+    }
+}
+
+// function playClickSound() {
+//     const mute = document.getElementById("muteCheckbox").checked;
+//     if (!mute) {
+//         // 連続再生に備え、currentTime をリセット
+//         clickSound.currentTime = 0;
+//         clickSound.play();
+//     }
+// }
+
+
 function formatTime(ms) {
     let date = new Date(ms);
     let minutes = String(date.getUTCMinutes()).padStart(2, "0");
@@ -63,9 +88,12 @@ function updateButtonState() {
 
 // 「開始 / 停止」ボタンの切り替え
 document.getElementById("toggle").addEventListener("mousedown", () => {
+
     if (running) {
+        playSound(stopSound);  // ストップ時の音
         socket.emit("stop");
     } else {
+        playSound(startSound);
         // スタート時は両方のタイマーを0から始める
         lapStartTime = 0;
         socket.emit("start");
@@ -75,9 +103,11 @@ document.getElementById("toggle").addEventListener("mousedown", () => {
 // 「ラップ / リセット」ボタンの切り替え
 document.getElementById("action").addEventListener("mousedown", () => {
     if (running) {
+        playSound(lapSound);
         const lapTime = formatTime(elapsedTime);
         socket.emit("lap", lapTime);
     } else {
+        playSound(resetSound);
         socket.emit("reset");
     }
 });
