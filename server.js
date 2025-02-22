@@ -48,6 +48,9 @@ socket.on("start", () => {
         }, 10);
         running = true;
         broadcastTime();
+
+        io.emit("globalSound", "start");
+
     }
 });
 
@@ -59,6 +62,7 @@ socket.on("stop", () => {
         clearInterval(timerInterval);
         running = false;
         broadcastTime();
+                io.emit("globalSound", "stop");
     }
 });
 
@@ -71,6 +75,7 @@ socket.on("reset", () => {
     lapStartTime = 0;
     broadcastTime();
     broadcastLaps();
+            io.emit("globalSound", "reset");
 });
 
 
@@ -96,6 +101,7 @@ socket.on("lap", (lapTime) => {
     lapStartTime = lapMs;  // ここでlapStartTimeを更新
     broadcastLaps();
     broadcastTime();
+            io.emit("globalSound", "lap");
 });
 
 

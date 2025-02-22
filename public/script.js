@@ -55,7 +55,25 @@ socket.on("updateTime", (data) => {
 });
 
 
-
+// サーバーからの "globalSound" イベントを監視
+socket.on("globalSound", (soundType) => {
+    switch(soundType) {
+        case "start":
+            playSound(startSound);
+            break;
+        case "stop":
+            playSound(stopSound);
+            break;
+        case "lap":
+            playSound(lapSound);
+            break;
+        case "reset":
+            playSound(resetSound);
+            break;
+        default:
+            break;
+    }
+});
 
 
 // サーバーからラップタイムのリストを受信（新しいものを上に表示）
@@ -92,13 +110,13 @@ document.getElementById("toggle").addEventListener("mousedown", () => {
     if (running) {
 
         socket.emit("stop");
-        playSound(stopSound);  // ストップ時の音
+        // playSound(stopSound);  // ストップ時の音
     } else {
 
         // スタート時は両方のタイマーを0から始める
         lapStartTime = 0;
         socket.emit("start");
-        playSound(startSound);
+        // playSound(startSound);
     }
 });
 
@@ -108,11 +126,11 @@ document.getElementById("action").addEventListener("mousedown", () => {
 
         const lapTime = formatTime(elapsedTime);
         socket.emit("lap", lapTime);
-        playSound(lapSound);
+        // playSound(lapSound);
     } else {
 
         socket.emit("reset");
-        playSound(resetSound);
+        // playSound(resetSound);
     }
 });
 
