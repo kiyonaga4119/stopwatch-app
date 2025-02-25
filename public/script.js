@@ -174,3 +174,16 @@ document.getElementById("disableButtons").addEventListener("change", () => {
     document.getElementById("toggle").disabled = disable;
     document.getElementById("action").disabled = disable;
 });
+
+document.getElementById("nameSelect").addEventListener("change", () => {
+    const newName = document.getElementById("nameSelect").value;
+    socket.emit("nameChange", newName);
+});
+
+
+socket.on("updateName", (newName) => {
+    // 他の端末からの変更であっても、セレクトボックスの値を更新する
+    document.getElementById("nameSelect").value = newName;
+    // もし別の表示領域（例: ヘッダーなど）で名前を表示する場合は、そちらも更新する
+    // document.getElementById("currentNameDisplay").textContent = newName;
+});

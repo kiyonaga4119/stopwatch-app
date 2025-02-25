@@ -18,6 +18,7 @@ let running = false;
 let timerInterval;
 let laps = [];
 let lapStartTime = 0;
+let currentName = "";
 
 
 function broadcastTime() {
@@ -35,6 +36,14 @@ io.on("connection", (socket) => {
     // 接続したクライアントに最新の状態を送信
     socket.emit("updateTime", { elapsedTime, running });
     socket.emit("updateLaps", laps);
+    socket.emit("updateName", currentName);
+
+    // 名前変更イベントの受信とブロードキャスト
+    socket.on("nameChange", (newName) => {
+        currentName = newName;
+        io.emit("updateName", currentName);
+    });
+
 
 socket.on("start", () => {
     if (!running) {
