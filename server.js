@@ -1,7 +1,17 @@
 const express = require("express");
 const path = require("path");
 const http = require("http");
+const session = require("express-session");
+
 const { Server } = require("socket.io");
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false); // または true に変更する場合は、mongoose.set('strictQuery', true);
+
+
+// DB接続の初期化
+require('./config/db');
+
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const server = http.createServer(app);
@@ -10,6 +20,42 @@ const io = new Server(server);
 const PORT = 3000;
 
 app.use(express.static(path.join(__dirname, "public")));
+
+
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(
+  session({
+    secret: "yourSecretKey",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// 認証ルートの設定
+app.use('/', authRoutes);
+
+// ストップウォッチアプリへのアクセス（認証必須）
+function isAuthenticated(req, res, next) {
+  if (req.session.username) {
+    return next();
+  }
+  res.redirect("/login");
+}
+
+app.get("/app", isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
+
+
+
+
+
+
+
+
 
 let startTime = 0;
 let elapsedTime = 0;
